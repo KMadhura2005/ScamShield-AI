@@ -309,11 +309,9 @@ def analyze_page():
                 analyzed = True
                 save_analysis(result["risk_level"])
 
-            except Exception:
-                app.logger.exception("Website job analysis failed")
-                error_message = (
-                    "Analysis failed. Please check the Flask terminal."
-                )
+            except Exception as e:
+              app.logger.exception("Website job analysis failed")
+              error_message = f"Analysis failed: {type(e).__name__}. Please try again."
 
     return render_template(
         "analyze.html",
