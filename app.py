@@ -286,6 +286,7 @@ def about():
 # JOB ANALYSIS PAGE
 # URL: /analyze
 # --------------------------------------------------
+
 @app.route("/analyze", methods=["GET", "POST"])
 def analyze_page():
     job_text = ""
@@ -306,12 +307,15 @@ def analyze_page():
 
             try:
                 result = analyze_job(job_text)
-                analyzed = True
                 save_analysis(result["risk_level"])
+                analyzed = True
 
             except Exception as e:
-              app.logger.exception("Website job analysis failed")
-              error_message = f"Analysis failed: {type(e).__name__}. Please try again."
+                app.logger.exception("Website job analysis failed")
+                error_message = 
+                (
+                     f"Analysis failed: {type(e).__name__}: {str(e)}"
+                )
 
     return render_template(
         "analyze.html",
