@@ -312,8 +312,7 @@ def analyze_page():
 
             except Exception as e:
                 app.logger.exception("Website job analysis failed")
-                error_message = 
-                (
+                error_message =  (
                      f"Analysis failed: {type(e).__name__}: {str(e)}"
                 )
 
