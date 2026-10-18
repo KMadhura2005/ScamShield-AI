@@ -1,67 +1,36 @@
+# 🛡️ ScamShield AI — Job Scam Detector
 
-# 🛡️ ScamShield AI — AI-Powered Job Scam Detection
+ScamShield AI is a machine learning–powered application designed to help users identify potential job scams by analyzing job advertisements and highlighting suspicious indicators.
 
-ScamShield AI is a machine learning-based application that helps job seekers identify potential warning signs in online job advertisements. It combines a Flask web application, a risk-analysis dashboard, and a Chrome extension to make job scam analysis more accessible.
+## 🚀 Features
 
-> **Project goal:** Help users make more informed decisions by identifying suspicious language and potential job scam indicators.
+- **Job Advertisement Analysis:** Analyze job descriptions to identify potential scam indicators.
+- **ML-Based Prediction:** Uses a trained machine learning model to estimate potential fraud risk.
+- **Risk Assessment:** Displays a risk level and fraud score.
+- **Warning Signs:** Highlights suspicious phrases and potential red flags.
+- **Dashboard:** Stores analysis history for reviewing previous results.
+- **Chrome Extension:** Analyze job listings directly from supported webpages.
+- **Input Validation:** Provides feedback when the advertisement field is empty.
 
-## ✨ Features
+## 🧰 Technologies Used
 
-- **AI-Based Detection:** Analyzes job advertisement text using a trained machine learning model.
-- **Risk Classification:** Displays a Low, Medium, or High risk category.
-- **Suspicious Phrase Detection:** Highlights potentially misleading or suspicious wording.
-- **Safety Warnings:** Checks for indicators such as upfront payment requests, guaranteed selection claims, unrealistic salary promises, and urgency tactics.
-- **Web Dashboard:** Displays analysis statistics, risk summaries, and recent analysis history.
-- **Analysis History:** Stores analysis records locally using SQLite.
-- **Chrome Extension:** Provides browser-based job text analysis through the Flask API.
-- **Report Copying:** Supports copying analysis reports from the extension.
+- Python
+- Flask
+- Machine Learning
+- Scikit-learn
+- SQLite
+- HTML and CSS
+- JavaScript
+- Chrome Extension APIs
+- Render
 
-## 🛠️ Technology Stack
+## 🌐 Live Demo
 
-| Technology | Purpose |
-|---|---|
-| Python | Application logic |
-| Flask | Web application and API |
-| Scikit-learn | Machine learning |
-| HTML5 and CSS3 | User interface |
-| JavaScript | Browser extension functionality |
-| SQLite | Local analysis history |
-| Chrome Extension APIs | Browser integration |
+**Web Application:** https://scamshield-ai-0aa0.onrender.com
 
-## 📁 Project Structure
+**GitHub Repository:** https://github.com/KMadhura2005/ScamShield-AI
 
-```text
-ScamShield-AI/
-├── app.py
-├── train_model.py
-├── requirements.txt
-├── .gitignore
-├── README.md
-├── models/
-│   └── scamshield_model.pkl
-├── templates/
-│   ├── home.html
-│   ├── about.html
-│   ├── analyze.html
-│   └── index.html
-├── static/
-│   └── style.css
-└── extension/
-    ├── manifest.json
-    ├── popup.html
-    ├── popup.css
-    └── popup.js
-```
-
-The local training dataset and SQLite database are excluded from version control.
-
-## ⚙️ Installation and Setup
-
-### Prerequisites
-
-- Python 3.10 or a compatible version for the project's dependencies
-- Google Chrome, if you want to use the extension
-- Git
+## 💻 Run Locally
 
 ### 1. Clone the repository
 
@@ -70,81 +39,63 @@ git clone https://github.com/KMadhura2005/ScamShield-AI.git
 cd ScamShield-AI
 ```
 
-### 2. Create a virtual environment
+### 2. Create and activate a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### 3. Activate the environment
-
-**Windows PowerShell:**
+Windows PowerShell:
 
 ```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-**macOS/Linux:**
+### 3. Install dependencies
+
+If the repository includes `requirements.txt`, run:
 
 ```bash
-source venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### 4. Install dependencies
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### 5. Start the application
+### 4. Start the application
 
 ```bash
 python app.py
 ```
 
-Open your browser at:
-
-http://127.0.0.1:5000
-
-Keep the Flask server running while using the local application.
+Open the local URL shown in your terminal.
 
 ## 🧩 Chrome Extension Setup
 
-1. Start the Flask application.
-2. Open Google Chrome.
-3. Visit `chrome://extensions/`.
-4. Enable **Developer mode**.
-5. Click **Load unpacked**.
-6. Select the project's `extension` folder.
-7. Open the extension and try analyzing job-related text.
+1. Open Google Chrome.
+2. Visit `chrome://extensions`.
+3. Enable **Developer mode**.
+4. Click **Load unpacked**.
+5. Select the repository's `extension` folder.
+6. Open the ScamShield AI extension and test it on a job listing.
 
-The extension relies on the local Flask API for analysis. Confirm that its API address matches the address and port used by the running application.
+## ⚙️ How It Works
 
-## 🔍 How It Works
+1. The user submits a job advertisement or analyzes a listing through the extension.
+2. The application processes the available job text.
+3. The trained model predicts a potential fraud risk.
+4. The application displays the risk assessment and relevant warning signs.
+5. Analysis history can be reviewed through the dashboard.
 
-1. **Input:** Provide the text of a job advertisement.
-2. **Analysis:** The machine learning model and warning checks examine the text.
-3. **Risk assessment:** The application presents its prediction and risk classification.
-4. **Review:** Read the detected warning signals and independently verify the employer.
+## 🎯 Project Goal
+
+To help job seekers recognize suspicious recruitment practices and make more informed decisions when evaluating job opportunities.
 
 ## ⚠️ Disclaimer
 
-ScamShield AI is an educational and decision-support project. Its predictions, risk scores, and warning rules are estimates and may be incorrect. A low-risk result does not guarantee that a job is genuine, and a high-risk result does not prove fraud.
+ScamShield AI is an assistance tool, not a guarantee that a job is genuine or fraudulent. Predictions may be incorrect. Verify employers, recruitment channels, and payment requests independently before sharing sensitive information or making payments.
 
-Always verify employers through official channels. Be cautious of recruitment fees, unrealistic promises, and requests for sensitive personal or financial information.
+## 👩‍💻 Author
 
-## 🚀 Future Improvements
+**Madhura Kadam**
 
-- Evaluate model performance on unseen advertisements.
-- Improve precision and recall for fraudulent-job detection.
-- Expand and maintain the training dataset.
-- Improve the dashboard and analysis reports.
-- Explore secure online deployment.
+Computer Science and Engineering Student
 
-## 👩‍💻 Developer
-
-**GitHub:** [KMadhura2005](https://github.com/KMadhura2005)
-
----
-
-*Built to support safer and more informed job searching.*
+GitHub: https://github.com/KMadhura2005
