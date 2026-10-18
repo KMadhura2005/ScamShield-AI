@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamShield AI</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ ScamShield AI</h1>
+        <p>Check a job description for potential scam indicators.</p>
+
+        <div class="input-section">
+            <label for="jobDescription">Paste Job Description</label>
+            <textarea
+                id="jobDescription"
+                placeholder="Paste the complete job description here..."
+                rows="7"
+            ></textarea>
+
+            <button id="analyzeTextBtn">Analyze Job Description</button>
+        </div>
+
+        <div class="separator">OR</div>
+
+        <button id="analyzeBtn">Analyze Current Page</button>
+
+        <p id="status" role="status"></p>
+
+        <div id="results" hidden>
+            <div id="riskCard">
+                <h2>Risk Level: <span id="riskLevel">Unknown</span></h2>
+                <p id="riskDescription"></p>
+                <p>Estimated Fraud Probability: <strong id="fraudProbability">0%</strong></p>
+            </div>
+
+            <h3>Warning Signs</h3>
+            <ul id="warningList"></ul>
+
+            <h3>Suspicious Phrases</h3>
+            <div id="suspiciousPhrases">
+                No phrases analyzed yet.
+            </div>
+
+            <h3>Recommendation</h3>
+            <p id="recommendation"></p>
+
+            <button id="copyReportBtn">Copy Report</button>
+            <p id="copyStatus" role="status"></p>
+
+            <p class="disclaimer">
+                This tool provides an estimate, not proof of fraud.
+                Always verify employers independently.
+            </p>
+        </div>
+    </div>
+
+    <section id="historySection">
+    <h3>Recent Analysis History</h3>
+    <p id="historyEmpty">Your recent checks will appear here.</p>
+    <ul id="historyList"></ul>
+    <button id="clearHistoryBtn" type="button">Clear History</button>
+</section>
+
+    <script src="popup.js"></script>
+</body>
+</html>

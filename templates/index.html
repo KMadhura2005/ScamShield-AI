@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamShield AI | Job Scam Detector</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Website Header -->
+        <header>
+            <div class="logo">🛡️ ScamShield AI</div>
+            <p class="subtitle">
+                Detect suspicious job offers, understand warning signs,
+                and make informed decisions.
+            </p>
+        </header>
+
+        <!-- Job Advertisement Analysis Form -->
+        <main class="card">
+            <form method="POST" action="/">
+                <label for="job-description">
+                    Job Advertisement or Description
+                </label>
+
+                <textarea
+                    id="job-description"
+                    name="job_description"
+                    placeholder="Paste the complete job offer here..."
+                    required
+                >{{ job_text or '' }}</textarea>
+
+                <button type="submit">
+                    Analyze Advertisement →
+                </button>
+            </form>
+
+            <p class="note">
+                AI predictions are estimates, not proof of fraud.
+                Always verify an employer independently.
+            </p>
+        </main>
+
+        <!-- Analysis Results -->
+        {% if analyzed %}
+        <section class="card results-card">
+            <h2>Analysis Results</h2>
+
+            <div class="risk-panel risk-{{ risk_class }}">
+                <p class="result-label">Overall Risk Assessment</p>
+                <h3>{{ risk_level }} Risk</h3>
+
+                <p>
+                    {% if risk_level == "High" %}
+                        Several warning indicators may require immediate caution.
+                    {% elif risk_level == "Medium" %}
+                        Some indicators deserve further investigation.
+                    {% else %}
+                        Few warning indicators were detected by this assessment.
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Fraud Probability -->
+            <div class="probability-section">
+                <p class="result-label">
+                    Model-estimated fraud probability
+                </p>
+
+                <h2>{{ confidence }}%</h2>
+
+                <div class="progress-track">
+                    <div class="progress-fill"
+                         style="width: {{ confidence }}%;">
+                    </div>
+                </div>
+
+                <p class="note">
+                    This is a model estimate, not a guarantee that an
+                    advertisement is fraudulent or legitimate.
+                </p>
+            </div>
+
+            <!-- Warning Signs -->
+            <div class="warning-section">
+                <h3>🔎 Warning Signs and Explanations</h3>
+
+                {% if warnings %}
+                    {% for warning in warnings %}
+                    <div class="warning-item">
+                        <h4>⚠️ {{ warning.title }}</h4>
+
+                        <p>{{ warning.explanation }}</p>
+
+                        <p class="advice">
+                            <strong>What to do:</strong>
+                            {{ warning.advice }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>
+                        No matching keyword-based warning signs were found.
+                        Scams may use other wording, so verify the employer
+                        independently.
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- Recommended Action -->
+            <div class="recommendation-panel">
+                <h3>🛡️ Recommended Action</h3>
+                <p>{{ recommendation }}</p>
+            </div>
+
+            <!-- Safety Tips -->
+            <div class="education-panel">
+                <h3>💡 Stay Scam-Aware</h3>
+
+                <ul>
+                    <li>
+                        Verify vacancies through the employer's official website.
+                    </li>
+                    <li>
+                        Be cautious about payment demands and unrealistic promises.
+                    </li>
+                    <li>Never share OTPs or banking passwords.</li>
+                    <li>
+                        Check recruiter email addresses and contact details carefully.
+                    </li>
+                </ul>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Dashboard Summary -->
+        <section class="dashboard-summary">
+
+            <div class="summary-card">
+                <div class="summary-icon">🔍</div>
+                <div>
+                    <p>Total Checks</p>
+                    <h2>{{ total_checks }}</h2>
+                    <span>Advertisements analyzed</span>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">🚨</div>
+                <div>
+                    <p>High-Risk Alerts</p>
+                    <h2>{{ high_risk_alerts }}</h2>
+                    <span>Advertisements flagged as high risk</span>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">🛡️</div>
+                <div>
+                    <p>Protection Status</p>
+                    <h2>Active</h2>
+                    <span>AI-assisted job scam screening</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Risk Level Chart -->
+<section class="card">
+    <h2>📊 Risk Analysis Overview</h2>
+    <p class="section-description">
+        Understand the risk levels identified in your job advertisement checks.
+    </p>
+
+   
+<div class="risk-chart">
+
+    <div class="chart-item">
+        <span class="chart-label">🔴 High Risk</span>
+        <div class="chart-track">
+            <div class="chart-bar high-bar"
+                 style="width: {{ (risk_counts['High'] / total_checks * 100) if total_checks > 0 else 0 }}%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-item">
+        <span class="chart-label">🟡 Medium Risk</span>
+        <div class="chart-track">
+            <div class="chart-bar medium-bar"
+                 style="width: {{ (risk_counts['Medium'] / total_checks * 100) if total_checks > 0 else 0 }}%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-item">
+        <span class="chart-label">🟢 Low Risk</span>
+        <div class="chart-track">
+            <div class="chart-bar low-bar"
+                 style="width: {{ (risk_counts['Low'] / total_checks * 100) if total_checks > 0 else 0 }}%;">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+    <p class="note">
+        This visual is illustrative and does not represent actual risk counts yet.
+    </p>
+</section>
+
+        <!-- Recent Analysis -->
+        <section class="recent-analysis">
+            <h2>Recent Analysis</h2>
+
+            <p class="section-description">
+                Your latest job advertisement security checks
+            </p>
+
+            {% if recent_analyses %}
+            <div class="recent-analysis-list">
+
+                {% for item in recent_analyses %}
+                <div class="recent-analysis-item">
+
+                    <div>
+                        <strong>Analysis #{{ item.id }}</strong>
+                        <p>{{ item.created_at }}</p>
+                    </div>
+
+                    <span class="risk-badge risk-{{ item.risk_level|lower }}">
+                        {{ item.risk_level }} Risk
+                    </span>
+
+                </div>
+                {% endfor %}
+
+            </div>
+            {% else %}
+                <p>
+                    No analyses yet. Analyze a job advertisement to get started.
+                </p>
+            {% endif %}
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            ScamShield AI · Building safer online opportunities
+        </footer>
+
+    </div>
+</body>
+</html>

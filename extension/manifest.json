@@ -1,0 +1,19 @@
+
+{
+  "manifest_version": 3,
+  "name": "ScamShield AI - Job Scam Detector",
+  "version": "1.0.0",
+  "description": "Analyze job listings for potential scam indicators and understand why they may be risky.",
+  "permissions": [
+  "activeTab",
+  "scripting",
+  "storage"
+],
+  "host_permissions": [
+    "http://127.0.0.1:5000/*"
+  ],
+  "action": {
+    "default_title": "ScamShield AI",
+    "default_popup": "popup.html"
+  }
+}
