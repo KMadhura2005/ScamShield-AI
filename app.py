@@ -15,6 +15,7 @@ MODEL_PATH = BASE_DIR / "models" / "scamshield_model.pkl"
 model = joblib.load(MODEL_PATH)
 
 
+
 # Initialize the dashboard database
 def init_dashboard_db():
     with sqlite3.connect(DATABASE_PATH) as connection:
@@ -26,8 +27,11 @@ def init_dashboard_db():
             )
         """)
 
+# Initialize the database once
+init_dashboard_db()
 
 # Save one completed analysis
+
 def save_analysis(risk_level):
     with sqlite3.connect(DATABASE_PATH) as connection:
         connection.execute(
