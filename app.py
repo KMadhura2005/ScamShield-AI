@@ -44,15 +44,43 @@ def get_dashboard_stats():
         ).fetchone()[0]
 
         high_risk_alerts = connection.execute(
-            "SELECT COUNT(*) FROM analysis_history "
-            "WHERE risk_level = ?",
+            "SELECT COUNT(*) FROM analysis_history WHERE risk_level = ?",
             ("High",)
         ).fetchone()[0]
 
     return total_checks, high_risk_alerts
 
 
-init_dashboard_db()
+# Retrieve risk counts for the dashboard
+def get_risk_counts():
+    with sqlite3.connect(DATABASE_PATH) as connection:
+        rows = connection.execute("""
+            SELECT risk_level, COUNT(*)
+            FROM analysis_history
+            GROUP BY risk_level
+        """).fetchall()
+
+    counts = {"High": 0, "Medium": 0, "Low": 0}
+
+    for risk_level, count in rows:
+        if risk_level in counts:
+            counts[risk_level] = count
+
+    return counts
+
+
+# Retrieve recent analyses
+def get_recent_analyses():
+    with sqlite3.connect(DATABASE_PATH) as connection:
+        connection.row_factory = sqlite3.Row
+        rows = connection.execute("""
+            SELECT id, risk_level, created_at
+            FROM analysis_history
+            ORDER BY id DESC
+            LIMIT 5
+        """).fetchall()
+
+    return rows
 
 
 # Warning signs and explanations
@@ -148,34 +176,8 @@ WARNING_RULES = {
     }
 }
 
-def get_risk_counts():
-    with sqlite3.connect(DATABASE_PATH) as connection:
-        rows = connection.execute("""
-            SELECT risk_level, COUNT(*)
-            FROM analysis_history
-            GROUP BY risk_level
-        """).fetchall()
 
-    counts = {"High": 0, "Medium": 0, "Low": 0}
-
-    for risk_level, count in rows:
-        if risk_level in counts:
-            counts[risk_level] = count
-
-    return counts
-
-def get_recent_analyses():
-    with sqlite3.connect(DATABASE_PATH) as connection:
-        connection.row_factory = sqlite3.Row
-        rows = connection.execute("""
-            SELECT id, risk_level, created_at
-            FROM analysis_history
-            ORDER BY id DESC
-            LIMIT 5
-        """).fetchall()
-
-    return rows
-
+# Detect warning signs
 def detect_warning_signs(text):
     text_lower = text.lower()
     warnings = []
@@ -196,6 +198,7 @@ def detect_warning_signs(text):
     return warnings
 
 
+# Find suspicious phrases
 def find_suspicious_phrases(text):
     phrases = []
 
@@ -207,6 +210,7 @@ def find_suspicious_phrases(text):
     return phrases
 
 
+# Assess risk level
 def assess_risk(probability, warnings):
     # Preliminary project thresholds, not calibrated real-world probabilities.
     if probability >= 0.70 or len(warnings) >= 2:
@@ -218,6 +222,7 @@ def assess_risk(probability, warnings):
     return "Low", "low"
 
 
+# Recommendation based on risk level
 def get_recommendation(risk_level):
     if risk_level == "High":
         return (
@@ -239,6 +244,7 @@ def get_recommendation(risk_level):
     )
 
 
+# Analyze a job advertisement using the ML model
 def analyze_job(job_text):
     probability = float(model.predict_proba([job_text])[0][1])
     prediction = int(model.predict([job_text])[0])
@@ -258,60 +264,103 @@ def analyze_job(job_text):
     }
 
 
-# Website home page
-@app.route("/", methods=["GET", "POST"])
+# --------------------------------------------------
+# HOME PAGE
+# URL: /
+# --------------------------------------------------
+@app.route("/")
 def home():
-    prediction = None
-    confidence = None
-    warnings = []
-    risk_level = None
-    risk_class = None
-    recommendation = None
+    return render_template("home.html")
+
+
+# --------------------------------------------------
+# ABOUT PAGE
+# URL: /about
+# --------------------------------------------------
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+# --------------------------------------------------
+# JOB ANALYSIS PAGE
+# URL: /analyze
+# --------------------------------------------------
+@app.route("/analyze", methods=["GET", "POST"])
+def analyze_page():
     job_text = ""
     analyzed = False
+    error_message = None
+    result = {}
 
     if request.method == "POST":
         job_text = request.form.get("job_description", "").strip()
 
-        if job_text:
-            analyzed = True
+        if len(job_text) < 80:
+            error_message = (
+                "Please enter a job description containing "
+                "at least 80 characters."
+            )
+        else:
+            job_text = job_text[:15000]
 
-            result = analyze_job(job_text)
+            try:
+                result = analyze_job(job_text)
+                analyzed = True
+                save_analysis(result["risk_level"])
 
-            prediction = result["prediction"]
-            confidence = result["confidence"]
-            warnings = result["warnings"]
-            risk_level = result["risk_level"]
-            risk_class = result["risk_class"]
-            recommendation = result["recommendation"]
+            except Exception:
+                app.logger.exception("Website job analysis failed")
+                error_message = (
+                    "Analysis failed. Please check the Flask terminal."
+                )
 
-            # Record this completed website analysis
-            save_analysis(risk_level)
+    return render_template(
+        "analyze.html",
+        job_text=job_text,
+        analyzed=analyzed,
+        error_message=error_message,
+        prediction=result.get("prediction"),
+        confidence=result.get("confidence"),
+        warnings=result.get("warnings", []),
+        risk_level=result.get("risk_level"),
+        risk_class=result.get("risk_class"),
+        recommendation=result.get("recommendation"),
+        suspicious_phrases=result.get("suspicious_phrases", [])
+    )
 
-    
+
+# --------------------------------------------------
+# DASHBOARD PAGE
+# URL: /dashboard
+# --------------------------------------------------
+@app.route("/dashboard")
+def dashboard():
     total_checks, high_risk_alerts = get_dashboard_stats()
     risk_counts = get_risk_counts()
     recent_analyses = get_recent_analyses()
 
     return render_template(
         "index.html",
-        prediction=prediction,
-        confidence=confidence,
-        warnings=warnings,
-        risk_level=risk_level,
-        risk_class=risk_class,
-        recommendation=recommendation,
-        job_text=job_text,
-        analyzed=analyzed,
+        prediction=None,
+        confidence=None,
+        warnings=[],
+        risk_level=None,
+        risk_class=None,
+        recommendation=None,
+        job_text="",
+        analyzed=False,
         total_checks=total_checks,
         high_risk_alerts=high_risk_alerts,
         risk_counts=risk_counts,
         recent_analyses=recent_analyses
     )
- 
 
 
-# Chrome extension API
+# --------------------------------------------------
+# CHROME EXTENSION API
+# URL: /api/analyze
+# --------------------------------------------------
 @app.route("/api/analyze", methods=["POST"])
 def analyze_api():
     data = request.get_json(silent=True) or {}
@@ -329,13 +378,10 @@ def analyze_api():
             "error": "Please provide a more complete job listing."
         }), 400
 
-    if len(job_text) > 15000:
-        job_text = job_text[:15000]
+    job_text = job_text[:15000]
 
     try:
         result = analyze_job(job_text)
-
-        # Record this completed extension analysis too
         save_analysis(result["risk_level"])
 
         descriptions = {
@@ -369,5 +415,6 @@ def analyze_api():
         }), 500
 
 
+# Run the Flask application
 if __name__ == "__main__":
     app.run(debug=True)

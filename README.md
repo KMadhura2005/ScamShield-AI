@@ -1,29 +1,32 @@
+
 # 🛡️ ScamShield AI — AI-Powered Job Scam Detection
 
-ScamShield AI is a machine learning-based project designed to help users identify potentially fraudulent job advertisements. It combines a Flask web application with a Chrome extension to make job scam analysis more accessible.
+ScamShield AI is a machine learning-based application that helps job seekers identify potential warning signs in online job advertisements. It combines a Flask web application, a risk-analysis dashboard, and a Chrome extension to make job scam analysis more accessible.
+
+> **Project goal:** Help users make more informed decisions by identifying suspicious language and potential job scam indicators.
 
 ## ✨ Features
 
-- **AI-Based Detection:** Analyzes job descriptions using a trained machine learning model.
-- **Risk Classification:** Categorizes job advertisements as Low, Medium, or High Risk.
-- **Suspicious Phrase Detection:** Highlights potentially misleading or suspicious language.
-- **Safety Warnings:** Flags common scam indicators, such as upfront payment requests, guaranteed selection claims, unrealistic salaries, and urgency tactics.
-- **Web Dashboard:** Displays analysis statistics, risk distribution, and recent analyses.
-- **Chrome Extension:** Allows users to analyze job-related text and view results from the browser.
-- **Analysis History:** Maintains recent analysis records and dashboard statistics.
-- **Report Copying:** Allows users to copy an analysis report from the extension.
+- **AI-Based Detection:** Analyzes job advertisement text using a trained machine learning model.
+- **Risk Classification:** Displays a Low, Medium, or High risk category.
+- **Suspicious Phrase Detection:** Highlights potentially misleading or suspicious wording.
+- **Safety Warnings:** Checks for indicators such as upfront payment requests, guaranteed selection claims, unrealistic salary promises, and urgency tactics.
+- **Web Dashboard:** Displays analysis statistics, risk summaries, and recent analysis history.
+- **Analysis History:** Stores analysis records locally using SQLite.
+- **Chrome Extension:** Provides browser-based job text analysis through the Flask API.
+- **Report Copying:** Supports copying analysis reports from the extension.
 
-## 🧰 Technologies Used
+## 🛠️ Technology Stack
 
-- Python
-- Flask
-- Machine Learning
-- Scikit-learn
-- HTML5
-- CSS3
-- JavaScript
-- SQLite
-- Chrome Extension APIs
+| Technology | Purpose |
+|---|---|
+| Python | Application logic |
+| Flask | Web application and API |
+| Scikit-learn | Machine learning |
+| HTML5 and CSS3 | User interface |
+| JavaScript | Browser extension functionality |
+| SQLite | Local analysis history |
+| Chrome Extension APIs | Browser integration |
 
 ## 📁 Project Structure
 
@@ -33,9 +36,13 @@ ScamShield-AI/
 ├── train_model.py
 ├── requirements.txt
 ├── .gitignore
+├── README.md
 ├── models/
 │   └── scamshield_model.pkl
 ├── templates/
+│   ├── home.html
+│   ├── about.html
+│   ├── analyze.html
 │   └── index.html
 ├── static/
 │   └── style.css
@@ -46,7 +53,15 @@ ScamShield-AI/
     └── popup.js
 ```
 
+The local training dataset and SQLite database are excluded from version control.
+
 ## ⚙️ Installation and Setup
+
+### Prerequisites
+
+- Python 3.10 or a compatible version for the project's dependencies
+- Google Chrome, if you want to use the extension
+- Git
 
 ### 1. Clone the repository
 
@@ -61,12 +76,18 @@ cd ScamShield-AI
 python -m venv venv
 ```
 
-### 3. Activate the virtual environment
+### 3. Activate the environment
 
 **Windows PowerShell:**
 
 ```powershell
 .\venv\Scripts\Activate.ps1
+```
+
+**macOS/Linux:**
+
+```bash
+source venv/bin/activate
 ```
 
 ### 4. Install dependencies
@@ -75,38 +96,50 @@ python -m venv venv
 python -m pip install -r requirements.txt
 ```
 
-### 5. Run the application
+### 5. Start the application
 
 ```bash
 python app.py
 ```
 
-Open your browser and visit:
+Open your browser at:
 
-`http://127.0.0.1:5000`
+http://127.0.0.1:5000
+
+Keep the Flask server running while using the local application.
 
 ## 🧩 Chrome Extension Setup
 
-1. Open Google Chrome.
-2. Navigate to `chrome://extensions/`.
-3. Enable **Developer mode**.
-4. Click **Load unpacked**.
-5. Select the `extension` folder inside the cloned project.
-6. Open the extension and try analyzing job-related text.
+1. Start the Flask application.
+2. Open Google Chrome.
+3. Visit `chrome://extensions/`.
+4. Enable **Developer mode**.
+5. Click **Load unpacked**.
+6. Select the project's `extension` folder.
+7. Open the extension and try analyzing job-related text.
 
-**Note:** The extension communicates with the Flask application, so start the Flask server before using features that require the local API.
+The extension relies on the local Flask API for analysis. Confirm that its API address matches the address and port used by the running application.
 
-## 🛡️ Important Disclaimer
+## 🔍 How It Works
 
-ScamShield AI provides an estimated risk assessment, not a definitive judgment about whether a job advertisement is fraudulent. Machine learning predictions and warning rules can produce false positives or miss scams. Always verify employers through official channels, and never pay recruitment fees or share sensitive information with unverified parties.
+1. **Input:** Provide the text of a job advertisement.
+2. **Analysis:** The machine learning model and warning checks examine the text.
+3. **Risk assessment:** The application presents its prediction and risk classification.
+4. **Review:** Read the detected warning signals and independently verify the employer.
+
+## ⚠️ Disclaimer
+
+ScamShield AI is an educational and decision-support project. Its predictions, risk scores, and warning rules are estimates and may be incorrect. A low-risk result does not guarantee that a job is genuine, and a high-risk result does not prove fraud.
+
+Always verify employers through official channels. Be cautious of recruitment fees, unrealistic promises, and requests for sensitive personal or financial information.
 
 ## 🚀 Future Improvements
 
-- Expand and improve the training dataset.
-- Evaluate model performance on unseen job advertisements.
-- Improve detection of new and evolving scam patterns.
-- Enhance the user interface and reporting features.
-- Explore deployment options for online access.
+- Evaluate model performance on unseen advertisements.
+- Improve precision and recall for fraudulent-job detection.
+- Expand and maintain the training dataset.
+- Improve the dashboard and analysis reports.
+- Explore secure online deployment.
 
 ## 👩‍💻 Developer
 

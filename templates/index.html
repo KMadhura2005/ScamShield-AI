@@ -4,257 +4,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScamShield AI | Job Scam Detector</title>
+    <title>Dashboard | ScamShield AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #faf9ff;
+            color: #17134f;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            min-height: 100px;
+            padding: 20px 30px;
+            background: #fff;
+            border-bottom: 1px solid #eeeaff;
+            box-shadow: 0 4px 20px rgba(65, 45, 130, 0.05);
+            z-index: 10;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 6px;
+            border: 1px solid #e9e5ff;
+            border-radius: 17px;
+            background: #fff;
+        }
+
+        .nav-links a {
+            padding: 12px 15px;
+            border-radius: 12px;
+            color: #29245e;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #5231d5;
+            background: #eeebff;
+        }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #17134f;
+            font-size: 26px;
+            font-weight: 800;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #6d4aff;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: 1.5px solid #8d79ff;
+            border-radius: 30px;
+            background: #fff;
+            color: #3926a6;
+            text-decoration: none;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background: #f0edff;
+            transform: translateY(-1px);
+        }
+
+        /* Dashboard layout */
+        .dashboard-container {
+            width: min(1250px, 100%);
+            margin: 0 auto;
+            padding: 38px 26px 55px;
+        }
+
+        .page-heading {
+            margin-bottom: 30px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 10px;
+            font-size: clamp(28px, 4vw, 38px);
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: #6b789b;
+            line-height: 1.7;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            padding: 25px;
+            border: 1px solid #e5e0ff;
+            border-radius: 17px;
+            background: #fff;
+            box-shadow: 0 6px 22px rgba(65, 45, 130, 0.05);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 14px;
+            color: #6b789b;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .stat-number {
+            margin: 0;
+            color: #5231d5;
+            font-size: 36px;
+            font-weight: 800;
+        }
+
+        .high-risk-number {
+            color: #c62828;
+        }
+
+        /* Dashboard cards */
+        .dashboard-card {
+            margin-bottom: 26px;
+            padding: 27px;
+            border: 1px solid #e5e0ff;
+            border-radius: 17px;
+            background: #fff;
+            box-shadow: 0 6px 22px rgba(65, 45, 130, 0.04);
+            min-width: 0;
+        }
+
+        .dashboard-card h2 {
+            margin: 0 0 20px;
+            font-size: 22px;
+        }
+
+        .dashboard-form textarea {
+            display: block;
+            width: 100%;
+            min-height: 180px;
+            padding: 16px;
+            border: 1px solid #d7dafa;
+            border-radius: 12px;
+            font: inherit;
+            line-height: 1.7;
+            resize: vertical;
+        }
+
+        .dashboard-form textarea:focus {
+            outline: none;
+            border-color: #8c78ff;
+            box-shadow: 0 0 0 4px rgba(109, 74, 255, 0.1);
+        }
+
+        .dashboard-form label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .primary-button {
+            display: inline-block;
+            margin-top: 17px;
+            padding: 14px 22px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(100deg, #6845f5, #5740ee);
+            color: #fff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .primary-button:hover {
+            background: #5231d5;
+        }
+
+        .risk-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .risk-box {
+            padding: 19px;
+            border-radius: 13px;
+            background: #f7f5ff;
+        }
+
+        .risk-box h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+        }
+
+        .risk-box p {
+            margin: 0;
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .risk-high {
+            color: #c62828;
+        }
+
+        .risk-medium {
+            color: #a56a00;
+        }
+
+        .risk-low {
+            color: #21834a;
+        }
+
+        /* Recent history */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #eeeaff;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .history-table th {
+            color: #6b789b;
+            font-weight: 700;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .empty-history {
+            color: #7180a4;
+            line-height: 1.7;
+        }
+
+        .risk-label {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #f3f0ff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 1050px) {
+            .navbar {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .logo {
+                position: static;
+                order: -1;
+                transform: none;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                padding: 16px 10px;
+                gap: 12px;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                gap: 2px;
+            }
+
+            .nav-links a {
+                padding: 10px 9px;
+                font-size: 12px;
+            }
+
+            .dashboard-container {
+                padding: 25px 14px 40px;
+            }
+
+            .stats-grid,
+            .risk-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-card,
+            .stat-card {
+                padding: 20px;
+            }
+
+            .page-heading h1 {
+                font-size: 28px;
+            }
+
+            .back-button {
+                padding: 10px 16px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
 
-        <!-- Website Header -->
-        <header>
-            <div class="logo">🛡️ ScamShield AI</div>
-            <p class="subtitle">
-                Detect suspicious job offers, understand warning signs,
-                and make informed decisions.
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">⌂ Home</a>
+            <a href="{{ url_for('analyze_page') }}">⌕ Analyze</a>
+            <a href="{{ url_for('dashboard') }}" class="active">▥ Dashboard</a>
+            <a href="{{ url_for('about') }}">ⓘ About</a>
+        </div>
+
+        <a href="{{ url_for('home') }}" class="logo">
+            🛡️ ScamShield <span>AI</span>
+        </a>
+
+        <a href="{{ url_for('home') }}" class="back-button">
+            ← Back to Home
+        </a>
+    </nav>
+
+    <main class="dashboard-container">
+
+        <header class="page-heading">
+            <h1>Dashboard Overview</h1>
+            <p>
+                Review your ScamShield AI activity, risk summaries,
+                and recent job advertisement analyses.
             </p>
         </header>
 
-        <!-- Job Advertisement Analysis Form -->
-        <main class="card">
-            <form method="POST" action="/">
-                <label for="job-description">
-                    Job Advertisement or Description
+        <!-- Statistics -->
+        <section class="stats-grid">
+            <article class="stat-card">
+                <h3>Total Analyses</h3>
+                <p class="stat-number">{{ total_checks }}</p>
+            </article>
+
+            <article class="stat-card">
+                <h3>High-Risk Alerts</h3>
+                <p class="stat-number high-risk-number">
+                    {{ high_risk_alerts }}
+                </p>
+            </article>
+        </section>
+
+        <!-- Quick analysis -->
+        <section class="dashboard-card">
+            <h2>🔍 Quick Job Analysis</h2>
+
+            <form
+                class="dashboard-form"
+                method="POST"
+                action="{{ url_for('analyze_page') }}"
+            >
+                <label for="dashboard_job_description">
+                    Paste a job advertisement
                 </label>
 
                 <textarea
-                    id="job-description"
+                    id="dashboard_job_description"
                     name="job_description"
-                    placeholder="Paste the complete job offer here..."
+                    placeholder="Paste at least 80 characters of the job advertisement here..."
+                    minlength="80"
+                    maxlength="15000"
                     required
-                >{{ job_text or '' }}</textarea>
+                ></textarea>
 
-                <button type="submit">
-                    Analyze Advertisement →
+                <button type="submit" class="primary-button">
+                    🛡️ Analyze Advertisement
                 </button>
             </form>
+        </section>
 
-            <p class="note">
-                AI predictions are estimates, not proof of fraud.
-                Always verify an employer independently.
-            </p>
-        </main>
+        <!-- Risk summary -->
+        <section class="dashboard-card">
+            <h2>Risk Summary</h2>
 
-        <!-- Analysis Results -->
-        {% if analyzed %}
-        <section class="card results-card">
-            <h2>Analysis Results</h2>
-
-            <div class="risk-panel risk-{{ risk_class }}">
-                <p class="result-label">Overall Risk Assessment</p>
-                <h3>{{ risk_level }} Risk</h3>
-
-                <p>
-                    {% if risk_level == "High" %}
-                        Several warning indicators may require immediate caution.
-                    {% elif risk_level == "Medium" %}
-                        Some indicators deserve further investigation.
-                    {% else %}
-                        Few warning indicators were detected by this assessment.
-                    {% endif %}
-                </p>
-            </div>
-
-            <!-- Fraud Probability -->
-            <div class="probability-section">
-                <p class="result-label">
-                    Model-estimated fraud probability
-                </p>
-
-                <h2>{{ confidence }}%</h2>
-
-                <div class="progress-track">
-                    <div class="progress-fill"
-                         style="width: {{ confidence }}%;">
-                    </div>
-                </div>
-
-                <p class="note">
-                    This is a model estimate, not a guarantee that an
-                    advertisement is fraudulent or legitimate.
-                </p>
-            </div>
-
-            <!-- Warning Signs -->
-            <div class="warning-section">
-                <h3>🔎 Warning Signs and Explanations</h3>
-
-                {% if warnings %}
-                    {% for warning in warnings %}
-                    <div class="warning-item">
-                        <h4>⚠️ {{ warning.title }}</h4>
-
-                        <p>{{ warning.explanation }}</p>
-
-                        <p class="advice">
-                            <strong>What to do:</strong>
-                            {{ warning.advice }}
-                        </p>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <p>
-                        No matching keyword-based warning signs were found.
-                        Scams may use other wording, so verify the employer
-                        independently.
+            <div class="risk-summary">
+                <div class="risk-box">
+                    <h3>🔴 High Risk</h3>
+                    <p class="risk-high">
+                        {{ risk_counts.get('High', 0) }}
                     </p>
-                {% endif %}
-            </div>
+                </div>
 
-            <!-- Recommended Action -->
-            <div class="recommendation-panel">
-                <h3>🛡️ Recommended Action</h3>
-                <p>{{ recommendation }}</p>
-            </div>
+                <div class="risk-box">
+                    <h3>🟠 Medium Risk</h3>
+                    <p class="risk-medium">
+                        {{ risk_counts.get('Medium', 0) }}
+                    </p>
+                </div>
 
-            <!-- Safety Tips -->
-            <div class="education-panel">
-                <h3>💡 Stay Scam-Aware</h3>
-
-                <ul>
-                    <li>
-                        Verify vacancies through the employer's official website.
-                    </li>
-                    <li>
-                        Be cautious about payment demands and unrealistic promises.
-                    </li>
-                    <li>Never share OTPs or banking passwords.</li>
-                    <li>
-                        Check recruiter email addresses and contact details carefully.
-                    </li>
-                </ul>
+                <div class="risk-box">
+                    <h3>🟢 Low Risk</h3>
+                    <p class="risk-low">
+                        {{ risk_counts.get('Low', 0) }}
+                    </p>
+                </div>
             </div>
         </section>
-        {% endif %}
 
-        <!-- Dashboard Summary -->
-        <section class="dashboard-summary">
-
-            <div class="summary-card">
-                <div class="summary-icon">🔍</div>
-                <div>
-                    <p>Total Checks</p>
-                    <h2>{{ total_checks }}</h2>
-                    <span>Advertisements analyzed</span>
-                </div>
-            </div>
-
-            <div class="summary-card">
-                <div class="summary-icon">🚨</div>
-                <div>
-                    <p>High-Risk Alerts</p>
-                    <h2>{{ high_risk_alerts }}</h2>
-                    <span>Advertisements flagged as high risk</span>
-                </div>
-            </div>
-
-            <div class="summary-card">
-                <div class="summary-icon">🛡️</div>
-                <div>
-                    <p>Protection Status</p>
-                    <h2>Active</h2>
-                    <span>AI-assisted job scam screening</span>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- Risk Level Chart -->
-<section class="card">
-    <h2>📊 Risk Analysis Overview</h2>
-    <p class="section-description">
-        Understand the risk levels identified in your job advertisement checks.
-    </p>
-
-   
-<div class="risk-chart">
-
-    <div class="chart-item">
-        <span class="chart-label">🔴 High Risk</span>
-        <div class="chart-track">
-            <div class="chart-bar high-bar"
-                 style="width: {{ (risk_counts['High'] / total_checks * 100) if total_checks > 0 else 0 }}%;">
-            </div>
-        </div>
-    </div>
-
-    <div class="chart-item">
-        <span class="chart-label">🟡 Medium Risk</span>
-        <div class="chart-track">
-            <div class="chart-bar medium-bar"
-                 style="width: {{ (risk_counts['Medium'] / total_checks * 100) if total_checks > 0 else 0 }}%;">
-            </div>
-        </div>
-    </div>
-
-    <div class="chart-item">
-        <span class="chart-label">🟢 Low Risk</span>
-        <div class="chart-track">
-            <div class="chart-bar low-bar"
-                 style="width: {{ (risk_counts['Low'] / total_checks * 100) if total_checks > 0 else 0 }}%;">
-            </div>
-        </div>
-    </div>
-
-</div>
-
-
-    <p class="note">
-        This visual is illustrative and does not represent actual risk counts yet.
-    </p>
-</section>
-
-        <!-- Recent Analysis -->
-        <section class="recent-analysis">
-            <h2>Recent Analysis</h2>
-
-            <p class="section-description">
-                Your latest job advertisement security checks
-            </p>
+        <!-- Recent analysis history -->
+        <section class="dashboard-card">
+            <h2>Recent Analyses</h2>
 
             {% if recent_analyses %}
-            <div class="recent-analysis-list">
+                <div class="table-wrapper">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Analysis ID</th>
+                                <th>Risk Level</th>
+                                <th>Date and Time</th>
+                            </tr>
+                        </thead>
 
-                {% for item in recent_analyses %}
-                <div class="recent-analysis-item">
-
-                    <div>
-                        <strong>Analysis #{{ item.id }}</strong>
-                        <p>{{ item.created_at }}</p>
-                    </div>
-
-                    <span class="risk-badge risk-{{ item.risk_level|lower }}">
-                        {{ item.risk_level }} Risk
-                    </span>
-
+                        <tbody>
+                            {% for item in recent_analyses %}
+                                <tr>
+                                    <td>#{{ item['id'] }}</td>
+                                    <td>
+                                        <span class="risk-label risk-{{ item['risk_level']|lower }}">
+                                            {{ item['risk_level'] }}
+                                        </span>
+                                    </td>
+                                    <td>{{ item['created_at'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                {% endfor %}
-
-            </div>
             {% else %}
-                <p>
-                    No analyses yet. Analyze a job advertisement to get started.
+                <p class="empty-history">
+                    No analyses yet. Analyze a job advertisement to see
+                    your activity here.
                 </p>
             {% endif %}
         </section>
 
-        <!-- Footer -->
-        <footer>
-            ScamShield AI · Building safer online opportunities
-        </footer>
+        <p class="empty-history">
+            ScamShield AI provides an estimated risk assessment, not proof
+            that a job is fraudulent or genuine. Always verify the employer
+            independently.
+        </p>
 
-    </div>
+    </main>
+
 </body>
 </html>

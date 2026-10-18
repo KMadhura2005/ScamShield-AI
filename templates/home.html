@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamShield AI | Home</title>
+
+    <style>
+        :root {
+            --primary: #6d4aff;
+            --primary-dark: #5231d5;
+            --background: #f7f5ff;
+            --text: #201a35;
+            --muted: #6f6a80;
+            --white: #ffffff;
+            --border: #e9e4fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 5%;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            min-height: 88px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px;
+            background: #f4f0ff;
+            border-radius: 14px;
+            z-index: 1;
+        }
+
+        .nav-links a {
+            color: #5e5675;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 11px 14px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text);
+            font-size: 21px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .back-btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 11px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover,
+        .primary-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Hero section */
+        .hero {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 90px 25px 70px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 9px 16px;
+            background: #ece6ff;
+            color: var(--primary-dark);
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 60px);
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            display: inline-block;
+            padding: 15px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .primary-btn {
+            color: white;
+            background: var(--primary);
+        }
+
+        .secondary-btn {
+            color: var(--primary-dark);
+            background: white;
+            border: 1px solid var(--border);
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Feature cards */
+        .features {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 25px 75px;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-heading h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 28px;
+            border-radius: 18px;
+            transition: 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(70, 45, 130, 0.08);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eee8ff;
+            border-radius: 14px;
+            font-size: 25px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--muted);
+            background: white;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .navbar {
+                flex-wrap: wrap;
+                gap: 18px;
+                padding: 20px;
+            }
+
+            .logo {
+                position: static;
+                transform: none;
+                order: -1;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                padding: 9px 10px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                justify-content: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .back-btn {
+                text-align: center;
+            }
+
+            .hero h1 {
+                letter-spacing: -0.5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="active">Home</a>
+            <a href="{{ url_for('analyze_page') }}">Analyze</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('about') }}">About</a>
+        </div>
+
+        <a href="{{ url_for('home') }}" class="logo">
+            🛡️ ScamShield <span>AI</span>
+        </a>
+
+        <a href="{{ url_for('home') }}" class="back-btn">
+            ← Back to Home
+        </a>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="badge">🛡️ AI-Powered Job Scam Detection</div>
+
+            <h1>
+                Your Career Deserves<br>
+                <span>Protection from Scams.</span>
+            </h1>
+
+            <p>
+                ScamShield AI helps you analyze suspicious job advertisements
+                using machine learning and warning signals. Identify potential
+                red flags before sharing your information or applying.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{{ url_for('analyze_page') }}" class="primary-btn">
+                    Analyze a Job Advertisement →
+                </a>
+
+                <a href="{{ url_for('about') }}" class="secondary-btn">
+                    Learn About ScamShield AI
+                </a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="section-heading">
+                <h2>Stay One Step Ahead</h2>
+                <p>Useful tools to help you make safer job-search decisions.</p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>
+                        Analyze job advertisement text with a machine learning
+                        model to identify potential scam indicators.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">🚨</div>
+                    <h3>Risk Assessment</h3>
+                    <p>
+                        View a Low, Medium, or High risk classification and
+                        review warning signals found in the advertisement.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analysis Dashboard</h3>
+                    <p>
+                        Review recorded checks, risk summaries, and recent
+                        analyses from your project dashboard.
+                    </p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 ScamShield AI. Built to support safer job searching.</p>
+        <p style="margin-top: 8px;">
+            AI predictions are estimates. Always verify job offers independently.
+        </p>
+    </footer>
+
+</body>
+</html>
